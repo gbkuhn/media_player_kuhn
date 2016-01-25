@@ -41,15 +41,13 @@ public class Scene2 {
 
 
     public void setPlay_btn(Button play_btn) {
-        play_btn.setText("PLAY action");
+        play_btn.setText("PLAY");
     }
 
-    public void setPause_btn(Button pause_btn) {
-        pause_btn.setText("PAUSE action");
-    }
+    public void setPause_btn(Button pause_btn) {pause_btn.setText("PAUSE");}
 
     public void setLoad_btn(Button load_btn) {
-        load_btn.setText("LOAD FILES action");
+        load_btn.setText("LOAD MP3's");
     }
 
 
@@ -76,7 +74,7 @@ public class Scene2 {
 
         layout2.setSpacing(10);
         layout2.setPadding(new Insets(20, 20, 10, 20));
-        layout2.getChildren().addAll(play_btn,pause_btn,listView);
+        layout2.getChildren().addAll(play_btn,pause_btn,listView,load_btn);
 
         /*file chooser*/
 
@@ -90,6 +88,7 @@ public class Scene2 {
         setPause_btn(pause_btn);
         setPlay_btn(play_btn);
         set_layout_main(layout2);
+        setLoad_btn(load_btn);
 
 
         play_btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -104,7 +103,7 @@ public class Scene2 {
             @Override
             public void handle(ActionEvent arg0) {
                 FileChooser fileChooser = new FileChooser();
-                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("MP3 files (*.mp3)", "*.mp3");
                 fileChooser.getExtensionFilters().add(extFilter);
                 File file = fileChooser.showOpenDialog(primaryStage);
                 System.out.println(file);
