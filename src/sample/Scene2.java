@@ -33,7 +33,7 @@ public class Scene2 {
 
     VBox layout2 = new VBox();
 
-    Scene scene2 = new Scene(layout2, 1024, 720);
+    Scene scene2 = new Scene(layout2, 540, 360);
 
     Button play_btn = new Button();
     Button pause_btn = new Button();
@@ -60,7 +60,7 @@ public class Scene2 {
 
         listView.setPrefSize(200, 250);
 
-        data.addAll("Track1", "Track2", "Track3", "Track4", "Track4","Track5");
+        data.addAll("Billy Joel - Piano Man", "[ELECTRO] Vexare - Ripened Pears", "Shakira - Hips Don't Lie", "Daft Punk - Aerodynamic", "Paperhouse","08-Sprawl");
 
         listView.setItems(data);
         listView.getSelectionModel().selectedItemProperty().addListener(

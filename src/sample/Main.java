@@ -59,7 +59,7 @@ public class Main extends Application {
 
         Scene2 scene2 = new Scene2();
 
-        primaryStage.setTitle("JavaFX test");
+        primaryStage.setTitle("Kuhnie Pie");
         primaryStage.setScene(scene);
 
         //CSS INITIALIZE
