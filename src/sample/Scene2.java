@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.shape.Rectangle;
@@ -26,6 +27,8 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.beans.value.ObservableValue;
 
+import java.io.File;
+
 public class Scene2 {
 
     VBox layout2 = new VBox();
@@ -34,6 +37,8 @@ public class Scene2 {
 
     Button play_btn = new Button();
     Button pause_btn = new Button();
+    Button load_btn = new Button("Load");
+
 
     public void setPlay_btn(Button play_btn) {
         play_btn.setText("PLAY action");
@@ -43,8 +48,12 @@ public class Scene2 {
         pause_btn.setText("PAUSE action");
     }
 
+    public void setLoad_btn(Button load_btn) {
+        load_btn.setText("LOAD FILES action");
+    }
 
-/*main playlist area*/
+
+    /*main playlist area*/
     ObservableList<String> data = FXCollections.observableArrayList();
     ListView<String> listView = new ListView<String>(data);
 
@@ -68,9 +77,13 @@ public class Scene2 {
         layout2.setSpacing(10);
         layout2.setPadding(new Insets(20, 20, 10, 20));
         layout2.getChildren().addAll(play_btn,pause_btn,listView);
+
+        /*file chooser*/
+
+
     }
 
-    public Scene return_scene2(){
+    public Scene return_scene2(Stage primaryStage){
 /*CSS*/
         scene2.getStylesheets().add(Main.class.getResource("Scene2UI.css").toExternalForm());
 
@@ -87,8 +100,19 @@ public class Scene2 {
             }
         });
 
+        load_btn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                FileChooser fileChooser = new FileChooser();
+                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+                fileChooser.getExtensionFilters().add(extFilter);
+                File file = fileChooser.showOpenDialog(primaryStage);
+                System.out.println(file);
+            }
 
+        });
         return scene2;
     }
 
 }
+

@@ -91,7 +91,7 @@ public class Main extends Application {
 
                 //NEED CREDENTIAL HANDLING
 
-                primaryStage.setScene(scene2.return_scene2());
+                primaryStage.setScene(scene2.return_scene2(primaryStage));
             }
         });
     }
