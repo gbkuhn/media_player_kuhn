@@ -6,6 +6,9 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
@@ -25,8 +28,16 @@ public class Scene2 {
     Button pause_btn = new Button();
     Button load_btn = new Button("Load");
 
-    public File file;
+    public String get_path() {
 
+        return path;
+    }
+
+
+    public String set_path(String _path){
+        path = _path;
+        return path;
+    }
 
     public void setPlay_btn(Button play_btn) {
         play_btn.setText("PLAY");
@@ -42,12 +53,17 @@ public class Scene2 {
     ObservableList<String> data = FXCollections.observableArrayList();
     ListView<String> listView = new ListView<String>(data);
 
+    /*mediaplayer JavaFX library for Mp3s*/
+    String path = get_path();
+    Media media = new Media(new File(path).toURI().toString());
+    MediaPlayer mediaPlayer = new MediaPlayer(media);
+    //mediaPlayer.setAutoPlay(true);
+    MediaView mediaView = new MediaView(mediaPlayer);
+
 
     public void set_layout_main(VBox layout2) {
 
         listView.setPrefSize(200, 250);
-
-
 
         //data.addAll("Billy Joel - Piano Man", "[ELECTRO] Vexare - Ripened Pears", "Shakira - Hips Don't Lie", "Daft Punk - Aerodynamic", "Paperhouse","08-Sprawl");
 
@@ -65,10 +81,8 @@ public class Scene2 {
         /***********************/
 
         layout2.setSpacing(10);
-        layout2.setPadding(new Insets(20, 20, 10, 20));
+        layout2.setPadding(new Insets(20, 10, 10, 10));
         layout2.getChildren().addAll(play_btn,pause_btn,listView,load_btn);
-
-        /*file chooser*/
 
 
     }
@@ -99,7 +113,10 @@ public class Scene2 {
                 fileChooser.getExtensionFilters().add(extFilter);
                 File file = fileChooser.showOpenDialog(primaryStage);
                 System.out.println(file);
+                set_path(String.valueOf(file));//set file path for JavaFX library media functions
                 data.add(String.valueOf(file));
+
+                mediaPlayer.setAutoPlay(true);
 
             }
 
