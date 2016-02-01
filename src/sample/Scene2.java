@@ -1,30 +1,16 @@
 package sample;
 
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.shape.Rectangle;
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Scene;
 import javafx.scene.control.ListView;
-import javafx.scene.control.cell.ComboBoxListCell;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 import javafx.beans.value.ObservableValue;
 
 import java.io.File;
@@ -39,6 +25,8 @@ public class Scene2 {
     Button pause_btn = new Button();
     Button load_btn = new Button("Load");
 
+    public File file;
+
 
     public void setPlay_btn(Button play_btn) {
         play_btn.setText("PLAY");
@@ -50,7 +38,6 @@ public class Scene2 {
         load_btn.setText("LOAD MP3's");
     }
 
-
     /*main playlist area*/
     ObservableList<String> data = FXCollections.observableArrayList();
     ListView<String> listView = new ListView<String>(data);
@@ -60,7 +47,12 @@ public class Scene2 {
 
         listView.setPrefSize(200, 250);
 
-        data.addAll("Billy Joel - Piano Man", "[ELECTRO] Vexare - Ripened Pears", "Shakira - Hips Don't Lie", "Daft Punk - Aerodynamic", "Paperhouse","08-Sprawl");
+
+
+        //data.addAll("Billy Joel - Piano Man", "[ELECTRO] Vexare - Ripened Pears", "Shakira - Hips Don't Lie", "Daft Punk - Aerodynamic", "Paperhouse","08-Sprawl");
+
+       // data.add(String.valueOf(get_files()));
+
 
         listView.setItems(data);
         listView.getSelectionModel().selectedItemProperty().addListener(
@@ -107,6 +99,8 @@ public class Scene2 {
                 fileChooser.getExtensionFilters().add(extFilter);
                 File file = fileChooser.showOpenDialog(primaryStage);
                 System.out.println(file);
+                data.add(String.valueOf(file));
+
             }
 
         });
