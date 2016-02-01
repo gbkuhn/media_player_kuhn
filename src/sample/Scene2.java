@@ -28,16 +28,20 @@ public class Scene2 {
     Button pause_btn = new Button();
     Button load_btn = new Button("Load");
 
+    String path=" ";
+
     public String get_path() {
 
         return path;
     }
 
 
-    public String set_path(String _path){
-        path = _path;
+    public String set_path(String path){
+        this.path = path;
         return path;
     }
+
+
 
     public void setPlay_btn(Button play_btn) {
         play_btn.setText("PLAY");
@@ -53,12 +57,6 @@ public class Scene2 {
     ObservableList<String> data = FXCollections.observableArrayList();
     ListView<String> listView = new ListView<String>(data);
 
-    /*mediaplayer JavaFX library for Mp3s*/
-    String path = get_path();
-    Media media = new Media(new File(path).toURI().toString());
-    MediaPlayer mediaPlayer = new MediaPlayer(media);
-    //mediaPlayer.setAutoPlay(true);
-    MediaView mediaView = new MediaView(mediaPlayer);
 
 
     public void set_layout_main(VBox layout2) {
@@ -108,6 +106,7 @@ public class Scene2 {
         load_btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
+
                 FileChooser fileChooser = new FileChooser();
                 FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("MP3 files (*.mp3)", "*.mp3");
                 fileChooser.getExtensionFilters().add(extFilter);
@@ -116,7 +115,22 @@ public class Scene2 {
                 set_path(String.valueOf(file));//set file path for JavaFX library media functions
                 data.add(String.valueOf(file));
 
+
+               // String path = "C:/Users/Geoff/Music/02-TinSoldier.mp3s";
+                Media media = new Media(new File(path).toURI().toString());
+                MediaPlayer mediaPlayer = new MediaPlayer(media);
                 mediaPlayer.setAutoPlay(true);
+                MediaView mediaView = new MediaView(mediaPlayer);
+
+                path = file.getAbsolutePath();
+                path = path.replace("\\", "/");
+                media = new Media(new File(path).toURI().toString());
+                mediaPlayer.stop();
+                mediaPlayer = new MediaPlayer(media);
+                mediaPlayer.setAutoPlay(true);
+                mediaView.setMediaPlayer(mediaPlayer);
+
+
 
             }
 
