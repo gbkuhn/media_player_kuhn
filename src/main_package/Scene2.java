@@ -1,4 +1,4 @@
-package sample;
+package main_package;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -28,7 +28,7 @@ public class Scene2 {
     Button pause_btn = new Button();
     Button load_btn = new Button("Load");
 
-    String path=" ";
+    String path=null;
 
     public String get_path() {
 
