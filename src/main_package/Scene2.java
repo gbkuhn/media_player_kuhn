@@ -58,7 +58,6 @@ public class Scene2 {
     ListView<String> listView = new ListView<String>(data);
 
 
-
     public void set_layout_main(VBox layout2) {
 
         listView.setPrefSize(200, 250);
