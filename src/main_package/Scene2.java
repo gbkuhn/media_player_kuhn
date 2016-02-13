@@ -85,7 +85,11 @@ public class Scene2 {
 
     }
 
+
+
+
     public Scene return_scene2(Stage primaryStage){
+
 /*CSS*/
         scene2.getStylesheets().add(Main.class.getResource("Scene2UI.css").toExternalForm());
 
@@ -94,12 +98,22 @@ public class Scene2 {
         set_layout_main(layout2);
         setLoad_btn(load_btn);
 
+        // String path = "C:/Users/Geoff/Music/02-TinSoldier.mp3s";
 
         play_btn.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("PLAY");
+            }
+        });
+
+        pause_btn.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("PAUSED");
+               // mediaPlayer.pause();
             }
         });
 
@@ -116,18 +130,15 @@ public class Scene2 {
                 data.add(String.valueOf(file));
 
 
-               // String path = "C:/Users/Geoff/Music/02-TinSoldier.mp3s";
-                Media media = new Media(new File(path).toURI().toString());
-                MediaPlayer mediaPlayer = new MediaPlayer(media);
-                mediaPlayer.setAutoPlay(true);
-                MediaView mediaView = new MediaView(mediaPlayer);
 
                 path = file.getAbsolutePath();
                 path = path.replace("\\", "/");
-                media = new Media(new File(path).toURI().toString());
+              Media media = new Media(new File(path).toURI().toString());
+              MediaPlayer mediaPlayer = new MediaPlayer(media);
                 mediaPlayer.stop();
-                mediaPlayer = new MediaPlayer(media);
                 mediaPlayer.setAutoPlay(true);
+                MediaView mediaView = new MediaView(mediaPlayer);
+
                 mediaView.setMediaPlayer(mediaPlayer);
 
 
