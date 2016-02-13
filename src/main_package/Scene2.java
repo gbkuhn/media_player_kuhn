@@ -100,11 +100,29 @@ public class Scene2 {
 
         // String path = "C:/Users/Geoff/Music/02-TinSoldier.mp3s";
 
+        //player will bring up directory window upon login
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("MP3 files (*.mp3)", "*.mp3");
+        fileChooser.getExtensionFilters().add(extFilter);
+        File file = fileChooser.showOpenDialog(primaryStage);
+        System.out.println(file);
+        set_path(String.valueOf(file));//set file path for JavaFX library media functions
+        data.add(String.valueOf(file));
+
+        Media media = new Media(new File(path).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+
+        mediaPlayer.stop();
+        mediaPlayer.setAutoPlay(false);//toggle whether song play when file chosen
+
+        //////////
+
         play_btn.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("PLAY");
+                mediaPlayer.play();
             }
         });
 
@@ -113,7 +131,7 @@ public class Scene2 {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("PAUSED");
-               // mediaPlayer.pause();
+                mediaPlayer.pause();
             }
         });
 
@@ -129,20 +147,17 @@ public class Scene2 {
                 set_path(String.valueOf(file));//set file path for JavaFX library media functions
                 data.add(String.valueOf(file));
 
-
-
                 path = file.getAbsolutePath();
                 path = path.replace("\\", "/");
-              Media media = new Media(new File(path).toURI().toString());
-              MediaPlayer mediaPlayer = new MediaPlayer(media);
+
+
                 mediaPlayer.stop();
                 mediaPlayer.setAutoPlay(true);
+
                 MediaView mediaView = new MediaView(mediaPlayer);
 
                 mediaView.setMediaPlayer(mediaPlayer);
-
-
-
+                
             }
 
         });
