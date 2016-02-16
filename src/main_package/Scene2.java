@@ -22,6 +22,7 @@ import javafx.scene.control.ListView;
 import javafx.beans.value.ObservableValue;
 
 import java.io.File;
+import java.util.List;
 
 public class Scene2 {
 
@@ -149,12 +150,14 @@ public class Scene2 {
                 FileChooser fileChooser = new FileChooser();
                 FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("MP3 files (*.mp3)", "*.mp3");
                 fileChooser.getExtensionFilters().add(extFilter);
-                File file = fileChooser.showOpenDialog(primaryStage);
+                //File file = fileChooser.showOpenDialog(primaryStage);
+                List<File> file = fileChooser.showOpenMultipleDialog(primaryStage);
                 System.out.println(file);
                 set_path(String.valueOf(file));//set file path for JavaFX library media functions
                 data.add(String.valueOf(file));
 
-                path = file.getAbsolutePath();
+                //path = file.getAbsolutePath();
+                path = file.get(0).getAbsolutePath();// ONLY RETURNS FIRST INDEX NEEDS EVERY SELECTED TO POPULATE LIST
                 path = path.replace("\\", "/");
 
 
