@@ -1,10 +1,15 @@
 package main_package;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -28,6 +33,9 @@ public class Scene2 {
     Button pause_btn = new Button();
     Button load_btn = new Button("Load");
 
+    /*slider for curent track*/
+
+
     String path=null;
 
     public String get_path() {
@@ -40,7 +48,6 @@ public class Scene2 {
         this.path = path;
         return path;
     }
-
 
 
     public void setPlay_btn(Button play_btn) {
@@ -67,13 +74,6 @@ public class Scene2 {
        // data.add(String.valueOf(get_files()));
 
 
-        listView.setItems(data);
-        listView.getSelectionModel().selectedItemProperty().addListener(
-                (ObservableValue<? extends String> ov, String old_val,
-                 String new_val) -> {
-                    System.out.println(new_val);
-
-                });
 
         /***********************/
 
@@ -81,9 +81,7 @@ public class Scene2 {
         layout2.setPadding(new Insets(20, 10, 10, 10));
         layout2.getChildren().addAll(play_btn,pause_btn,listView,load_btn);
 
-
     }
-
 
 
 
@@ -115,6 +113,16 @@ public class Scene2 {
         mediaPlayer.setAutoPlay(false);//toggle whether song play when file chosen
 
         //////////
+
+        listView.setItems(data);
+        listView.getSelectionModel().selectedItemProperty().addListener(
+                (ObservableValue<? extends String> ov, String old_val,
+                 String new_val) -> {
+                    System.out.println(new_val);
+                    mediaPlayer.play();
+
+                });
+
 
         play_btn.setOnAction(new EventHandler<ActionEvent>() {
 
