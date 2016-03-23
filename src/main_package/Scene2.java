@@ -8,8 +8,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -20,6 +18,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import javafx.beans.value.ObservableValue;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.util.List;
@@ -33,6 +32,14 @@ public class Scene2 {
     Button play_btn = new Button();
     Button pause_btn = new Button();
     Button load_btn = new Button("Load");
+
+
+    Duration duration;
+
+    Slider timeSlider = new Slider(0.0,100.0,0.0);
+
+    static double current_value = 0.0;
+
 
     /*slider for curent track*/
 
@@ -80,10 +87,9 @@ public class Scene2 {
 
         layout2.setSpacing(10);
         layout2.setPadding(new Insets(20, 10, 10, 10));
-        layout2.getChildren().addAll(play_btn,pause_btn,listView,load_btn);
+        layout2.getChildren().addAll(play_btn,pause_btn,timeSlider,listView,load_btn);
 
     }
-
 
 
     public Scene return_scene2(Stage primaryStage){
@@ -110,8 +116,10 @@ public class Scene2 {
         Media media = new Media(new File(path).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
 
-        mediaPlayer.stop();
+        mediaPlayer.play();//
+        mediaPlayer.pause(); //pause on load
         mediaPlayer.setAutoPlay(false);//toggle whether song play when file chosen
+
 
         //////////
 
@@ -129,17 +137,27 @@ public class Scene2 {
 
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("PLAY");
+                System.out.println("prompt: PLAY");
                 mediaPlayer.play();
+
+                System.out.println("On ready "+mediaPlayer.getOnReady());
+                System.out.println("Status:" +mediaPlayer.getStatus());
+                System.out.println("Duration: "+ duration);
+
             }
+
         });
 
         pause_btn.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("PAUSED");
+                System.out.println("prompt: PAUSED");
                 mediaPlayer.pause();
+
+                System.out.println("On ready: "+mediaPlayer.getOnReady());
+                System.out.println("Status:" +mediaPlayer.getStatus());
+                System.out.println("Duration: "+ duration);
             }
         });
 
@@ -171,7 +189,49 @@ public class Scene2 {
             }
 
         });
+
+
+        timeSlider.valueProperty().addListener(new InvalidationListener() {
+            public void invalidated(Observable ov) {
+                if (timeSlider.isValueChanging()) {
+                    mediaPlayer.pause();
+
+                    // multiply duration by percentage calculated by slider position
+                    System.out.println("TIMESLIDER MARK: "+timeSlider.getValue());
+                   // mediaPlayer.seek(duration.multiply(timeSlider.getValue() / 100.0));
+
+                    mediaPlayer.seek(Duration.millis(timeSlider.getValue()));
+
+                    System.out.println("DURATION: "+mediaPlayer.getTotalDuration());
+                    set_duration(mediaPlayer.getTotalDuration());
+
+                    mediaPlayer.play();
+
+                }
+            }
+        });
+
         return scene2;
+    }
+
+     void set_current_value(double value) {
+        this.current_value = value;
+        //return current_value;
+    }
+
+     double get_current_value(){
+
+        return this.current_value;
+    }
+
+    void set_duration(Duration value){
+        this.duration = value;
+
+    }
+
+    Duration get_duration(){
+
+        return duration;
     }
 
 }
