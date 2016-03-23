@@ -19,6 +19,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import javafx.beans.value.ObservableValue;
 import javafx.util.Duration;
+import javax.swing.JFileChooser;
+
 
 import java.io.File;
 import java.util.List;
@@ -105,13 +107,18 @@ public class Scene2 {
         // String path = "C:/Users/Geoff/Music/02-TinSoldier.mp3s";
 
         //player will bring up directory window upon login
+
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("MP3 files (*.mp3)", "*.mp3");
         fileChooser.getExtensionFilters().add(extFilter);
-        File file = fileChooser.showOpenDialog(primaryStage);
+        //File file = fileChooser.showOpenDialog(primaryStage);
+        List<File> file = fileChooser.showOpenMultipleDialog(primaryStage);
+
         System.out.println(file);
-        set_path(String.valueOf(file));//set file path for JavaFX library media functions
+        set_path(String.valueOf(file.get(0)));//set file path for JavaFX library media functions
         data.add(String.valueOf(file));
+
+
 
         Media media = new Media(new File(path).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -133,6 +140,7 @@ public class Scene2 {
                 (ObservableValue<? extends String> ov, String old_val,
                  String new_val) -> {
                     System.out.println(new_val);
+
                     mediaPlayer.play();
 
                 });
@@ -183,9 +191,8 @@ public class Scene2 {
                 path = file.get(0).getAbsolutePath();// ONLY RETURNS FIRST INDEX NEEDS EVERY SELECTED TO POPULATE LIST
                 path = path.replace("\\", "/");
 
-
-                mediaPlayer.stop();
-                mediaPlayer.setAutoPlay(true);
+                mediaPlayer.pause();
+                mediaPlayer.setAutoPlay(false);
 
                 MediaView mediaView = new MediaView(mediaPlayer);
 
@@ -207,10 +214,9 @@ public class Scene2 {
 
                     mediaPlayer.seek(Duration.millis(timeSlider.getValue()*1000));
 
-                    System.out.println("DURATION: "+mediaPlayer.getTotalDuration());
+                    System.out.println("DURATION: "+Duration.millis(timeSlider.getValue()));
 
                     mediaPlayer.play();
-
                 }
             }
         });

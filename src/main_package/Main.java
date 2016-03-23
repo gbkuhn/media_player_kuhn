@@ -57,7 +57,7 @@ public class Main extends Application {
 
         Scene2 scene2 = new Scene2();
 
-        primaryStage.setTitle("Kuhnie Pie");
+        primaryStage.setTitle("MP3 Player");
         primaryStage.setScene(scene);
 
         //CSS INITIALIZE
