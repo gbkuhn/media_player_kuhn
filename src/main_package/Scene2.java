@@ -115,8 +115,13 @@ public class Scene2 {
 
         Media media = new Media(new File(path).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
-
         mediaPlayer.play();//
+        //change the timesliders length
+        /*
+        timeSlider.setMin(0.0);
+        timeSlider.setMax(mediaPlayer.getTotalDuration().toSeconds());
+*/
+
         mediaPlayer.pause(); //pause on load
         mediaPlayer.setAutoPlay(false);//toggle whether song play when file chosen
 
@@ -200,10 +205,9 @@ public class Scene2 {
                     System.out.println("TIMESLIDER MARK: "+timeSlider.getValue());
                    // mediaPlayer.seek(duration.multiply(timeSlider.getValue() / 100.0));
 
-                    mediaPlayer.seek(Duration.millis(timeSlider.getValue()));
+                    mediaPlayer.seek(Duration.millis(timeSlider.getValue()*1000));
 
                     System.out.println("DURATION: "+mediaPlayer.getTotalDuration());
-                    set_duration(mediaPlayer.getTotalDuration());
 
                     mediaPlayer.play();
 
@@ -214,25 +218,7 @@ public class Scene2 {
         return scene2;
     }
 
-     void set_current_value(double value) {
-        this.current_value = value;
-        //return current_value;
-    }
 
-     double get_current_value(){
-
-        return this.current_value;
-    }
-
-    void set_duration(Duration value){
-        this.duration = value;
-
-    }
-
-    Duration get_duration(){
-
-        return duration;
-    }
 
 }
 
