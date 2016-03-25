@@ -112,6 +112,13 @@ public class Scene2 {
     }
 
 
+    public String trim_directory(String _directory){
+        _directory = path.substring(path.lastIndexOf("\\")+1, path.length());
+
+        return _directory;
+    }
+
+
     public Scene return_scene2(Stage primaryStage) {
 
 /*CSS*/
@@ -163,7 +170,7 @@ public class Scene2 {
 
                     get_mediaPlayer_obj().play();
 
-                    track_title.setText(new_val);
+                    track_title.setText(trim_directory(new_val));//trim directory method will get rid of prefix filepath
 
                     //mediaPlayer.play();
                 });
