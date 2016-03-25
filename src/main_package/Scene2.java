@@ -136,7 +136,6 @@ public class Scene2 {
             data.add(String.valueOf(file.get(i)));
         }
 
-
 /*
         Media media = new Media(new File(path).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -161,12 +160,15 @@ public class Scene2 {
                  String new_val) -> {
                     System.out.println(new_val);
 
+                    get_mediaPlayer_obj().stop();
+
                     set_file(new_val);
                     //media = new Media(new File(new_val).toURI().toString());
                     //mediaPlayer = new MediaPlayer(media);
 
-                    get_mediaPlayer_obj().play();
 
+
+                    get_mediaPlayer_obj().play();
 
                     //mediaPlayer.play();
 
