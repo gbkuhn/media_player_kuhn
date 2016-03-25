@@ -98,10 +98,9 @@ public class Scene2 {
         Media media = new Media(new File(_path).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
        // mediaPlayer.play();//
-
     }
 
-    public MediaPlayer get_file(){
+    public MediaPlayer get_mediaPlayer_obj(){
 
         return mediaPlayer;
     }
@@ -137,21 +136,25 @@ public class Scene2 {
             data.add(String.valueOf(file.get(i)));
         }
 
-
+/*
         Media media = new Media(new File(path).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();//
+*/
+        set_file(path);
+
+        get_mediaPlayer_obj().play();
         //change the timesliders length
         /*
         timeSlider.setMin(0.0);
         timeSlider.setMax(mediaPlayer.getTotalDuration().toSeconds());
 */
 
-        mediaPlayer.pause(); //pause on load
-        mediaPlayer.setAutoPlay(false);//toggle whether song play when file chosen
+        get_mediaPlayer_obj().pause(); //pause on load
+        get_mediaPlayer_obj().setAutoPlay(false);//toggle whether song play when file chosen
 
 
-        listView.setItems(data);
+        listView.setItems(data);//populates playlist
         listView.getSelectionModel().selectedItemProperty().addListener(
                 (ObservableValue<? extends String> ov, String old_val,
                  String new_val) -> {
@@ -161,7 +164,7 @@ public class Scene2 {
                     //media = new Media(new File(new_val).toURI().toString());
                     //mediaPlayer = new MediaPlayer(media);
 
-                    get_file().play();
+                    get_mediaPlayer_obj().play();
 
 
                     //mediaPlayer.play();
@@ -175,7 +178,8 @@ public class Scene2 {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("prompt: PLAY");
-                mediaPlayer.play();
+
+                get_mediaPlayer_obj().play();
 
                 System.out.println("On ready " + mediaPlayer.getOnReady());
                 System.out.println("Status:" + mediaPlayer.getStatus());
@@ -190,7 +194,7 @@ public class Scene2 {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("prompt: PAUSED");
-                mediaPlayer.pause();
+                get_mediaPlayer_obj().pause();
 
                 System.out.println("On ready: " + mediaPlayer.getOnReady());
                 System.out.println("Status:" + mediaPlayer.getStatus());
@@ -207,20 +211,21 @@ public class Scene2 {
                 fileChooser.getExtensionFilters().add(extFilter);
                 //File file = fileChooser.showOpenDialog(primaryStage);
                 List<File> file = fileChooser.showOpenMultipleDialog(primaryStage);
-                System.out.println(file);
-                set_path(String.valueOf(file));//set file path for JavaFX library media functions
-                data.add(String.valueOf(file));
 
-                //path = file.getAbsolutePath();
-                path = file.get(0).getAbsolutePath();// ONLY RETURNS FIRST INDEX NEEDS EVERY SELECTED TO POPULATE LIST
-                path = path.replace("\\", "/");
+                System.out.println(file); //prints the list
+                set_path(String.valueOf(file.get(0)));//set file path for JavaFX library media functions
+                // data.add(String.valueOf(file));
 
-                mediaPlayer.pause();
-                mediaPlayer.setAutoPlay(false);
+                //populates list after initial load
 
-                MediaView mediaView = new MediaView(mediaPlayer);
+                for (int i=0; i<file.size(); i++){
+                    data.add(String.valueOf(file.get(i)));
+                }
 
-                mediaView.setMediaPlayer(mediaPlayer);
+                set_file(path);
+
+                get_mediaPlayer_obj().pause();
+
 
             }
 
@@ -230,17 +235,17 @@ public class Scene2 {
         timeSlider.valueProperty().addListener(new InvalidationListener() {
             public void invalidated(Observable ov) {
                 if (timeSlider.isValueChanging()) {
-                    mediaPlayer.pause();
+                    get_mediaPlayer_obj().pause();
 
                     // multiply duration by percentage calculated by slider position
                     System.out.println("TIMESLIDER MARK: " + timeSlider.getValue());
                     // mediaPlayer.seek(duration.multiply(timeSlider.getValue() / 100.0));
 
-                    mediaPlayer.seek(Duration.millis(timeSlider.getValue() * 1000));
+                    get_mediaPlayer_obj().seek(Duration.millis(timeSlider.getValue() * 1000));
 
                     System.out.println("DURATION: " + Duration.millis(timeSlider.getValue()));
 
-                    mediaPlayer.play();
+                    get_mediaPlayer_obj().play();
                 }
             }
         });
