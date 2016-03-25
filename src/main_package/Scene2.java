@@ -1,5 +1,8 @@
 package main_package;
 
+import javafx.animation.Interpolator;
+import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.event.ActionEvent;
@@ -7,11 +10,13 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
@@ -28,7 +33,6 @@ public class Scene2 {
 
     MediaPlayer mediaPlayer;
 
-
     VBox layout2 = new VBox();
 
     Scene scene2 = new Scene(layout2, 540, 360);
@@ -36,6 +40,9 @@ public class Scene2 {
     Button play_btn = new Button();
     Button pause_btn = new Button();
     Button load_btn = new Button("Load");
+    static Text track_title = new Text("Track title");//blank upon initial load
+
+
 
 
     Duration duration;
@@ -59,7 +66,6 @@ public class Scene2 {
         this.path = path;
         return path;
     }
-
 
     public void setPlay_btn(Button play_btn) {
         play_btn.setText("PLAY");
@@ -90,7 +96,7 @@ public class Scene2 {
 
         layout2.setSpacing(10);
         layout2.setPadding(new Insets(20, 10, 10, 10));
-        layout2.getChildren().addAll(play_btn, pause_btn, timeSlider, listView, load_btn);
+        layout2.getChildren().addAll(play_btn, pause_btn,track_title, timeSlider, listView, load_btn);
 
     }
 
@@ -110,25 +116,24 @@ public class Scene2 {
 
 /*CSS*/
         scene2.getStylesheets().add(Main.class.getResource("Scene2UI.css").toExternalForm());
+        track_title.setId("track-text");//CSS for track title
 
         setPause_btn(pause_btn);
         setPlay_btn(play_btn);
         set_layout_main(layout2);
         setLoad_btn(load_btn);
 
-        // String path = "C:/Users/Geoff/Music/02-TinSoldier.mp3s";
-
         //player will bring up directory window upon login
 
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("MP3 files (*.mp3)", "*.mp3");
         fileChooser.getExtensionFilters().add(extFilter);
-        //File file = fileChooser.showOpenDialog(primaryStage);
         List<File> file = fileChooser.showOpenMultipleDialog(primaryStage);
+
 
         System.out.println(file); //prints the list
         set_path(String.valueOf(file.get(0)));//set file path for JavaFX library media functions
-       // data.add(String.valueOf(file));
+
 
         //populates list after initial load
 
@@ -136,19 +141,9 @@ public class Scene2 {
             data.add(String.valueOf(file.get(i)));
         }
 
-/*
-        Media media = new Media(new File(path).toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.play();//
-*/
         set_file(path);
 
         get_mediaPlayer_obj().play();
-        //change the timesliders length
-        /*
-        timeSlider.setMin(0.0);
-        timeSlider.setMax(mediaPlayer.getTotalDuration().toSeconds());
-*/
 
         get_mediaPlayer_obj().pause(); //pause on load
         get_mediaPlayer_obj().setAutoPlay(false);//toggle whether song play when file chosen
@@ -166,13 +161,11 @@ public class Scene2 {
                     //media = new Media(new File(new_val).toURI().toString());
                     //mediaPlayer = new MediaPlayer(media);
 
-
-
                     get_mediaPlayer_obj().play();
 
+                    track_title.setText(new_val);
+
                     //mediaPlayer.play();
-
-
                 });
 
 
@@ -187,6 +180,7 @@ public class Scene2 {
                 System.out.println("On ready " + mediaPlayer.getOnReady());
                 System.out.println("Status:" + mediaPlayer.getStatus());
                 System.out.println("Duration: " + duration);
+
 
             }
 

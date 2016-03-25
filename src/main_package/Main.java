@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 public class Main extends Application {
 
@@ -55,9 +56,10 @@ public class Main extends Application {
 
         Scene scene = new Scene(layout, 300, 250);
 
+
         Scene2 scene2 = new Scene2();
 
-        primaryStage.setTitle("MP3 Player");
+        primaryStage.setTitle("MP3 Player - Kuhn");
         primaryStage.setScene(scene);
 
         //CSS INITIALIZE
