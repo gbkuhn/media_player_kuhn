@@ -136,6 +136,7 @@ public class Scene2 {
             data.add(String.valueOf(file.get(i)));
         }
 
+
 /*
         Media media = new Media(new File(path).toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -225,7 +226,6 @@ public class Scene2 {
                 set_file(path);
 
                 get_mediaPlayer_obj().pause();
-
 
             }
 
