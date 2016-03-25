@@ -19,13 +19,15 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import javafx.beans.value.ObservableValue;
 import javafx.util.Duration;
-import javax.swing.JFileChooser;
 
 
 import java.io.File;
 import java.util.List;
 
 public class Scene2 {
+
+    MediaPlayer mediaPlayer;
+
 
     VBox layout2 = new VBox();
 
@@ -38,15 +40,14 @@ public class Scene2 {
 
     Duration duration;
 
-    Slider timeSlider = new Slider(0.0,100.0,0.0);
+    Slider timeSlider = new Slider(0.0, 100.0, 0.0);
 
     static double current_value = 0.0;
-
 
     /*slider for curent track*/
 
 
-    String path=null;
+    String path = null;
 
     public String get_path() {
 
@@ -54,7 +55,7 @@ public class Scene2 {
     }
 
 
-    public String set_path(String path){
+    public String set_path(String path) {
         this.path = path;
         return path;
     }
@@ -64,7 +65,9 @@ public class Scene2 {
         play_btn.setText("PLAY");
     }
 
-    public void setPause_btn(Button pause_btn) {pause_btn.setText("PAUSE");}
+    public void setPause_btn(Button pause_btn) {
+        pause_btn.setText("PAUSE");
+    }
 
     public void setLoad_btn(Button load_btn) {
         load_btn.setText("LOAD MP3's");
@@ -81,20 +84,30 @@ public class Scene2 {
 
         //data.addAll("Billy Joel - Piano Man", "[ELECTRO] Vexare - Ripened Pears", "Shakira - Hips Don't Lie", "Daft Punk - Aerodynamic", "Paperhouse","08-Sprawl");
 
-       // data.add(String.valueOf(get_files()));
-
-
+        // data.add(String.valueOf(get_files()));
 
         /***********************/
 
         layout2.setSpacing(10);
         layout2.setPadding(new Insets(20, 10, 10, 10));
-        layout2.getChildren().addAll(play_btn,pause_btn,timeSlider,listView,load_btn);
+        layout2.getChildren().addAll(play_btn, pause_btn, timeSlider, listView, load_btn);
 
     }
 
+    public void set_file(String _path){
+        Media media = new Media(new File(_path).toURI().toString());
+        mediaPlayer = new MediaPlayer(media);
+       // mediaPlayer.play();//
 
-    public Scene return_scene2(Stage primaryStage){
+    }
+
+    public MediaPlayer get_file(){
+
+        return mediaPlayer;
+    }
+
+
+    public Scene return_scene2(Stage primaryStage) {
 
 /*CSS*/
         scene2.getStylesheets().add(Main.class.getResource("Scene2UI.css").toExternalForm());
@@ -114,10 +127,15 @@ public class Scene2 {
         //File file = fileChooser.showOpenDialog(primaryStage);
         List<File> file = fileChooser.showOpenMultipleDialog(primaryStage);
 
-        System.out.println(file);
+        System.out.println(file); //prints the list
         set_path(String.valueOf(file.get(0)));//set file path for JavaFX library media functions
-        data.add(String.valueOf(file));
+       // data.add(String.valueOf(file));
 
+        //populates list after initial load
+
+        for (int i=0; i<file.size(); i++){
+            data.add(String.valueOf(file.get(i)));
+        }
 
 
         Media media = new Media(new File(path).toURI().toString());
@@ -133,15 +151,21 @@ public class Scene2 {
         mediaPlayer.setAutoPlay(false);//toggle whether song play when file chosen
 
 
-        //////////
-
         listView.setItems(data);
         listView.getSelectionModel().selectedItemProperty().addListener(
                 (ObservableValue<? extends String> ov, String old_val,
                  String new_val) -> {
                     System.out.println(new_val);
 
-                    mediaPlayer.play();
+                    set_file(new_val);
+                    //media = new Media(new File(new_val).toURI().toString());
+                    //mediaPlayer = new MediaPlayer(media);
+
+                    get_file().play();
+
+
+                    //mediaPlayer.play();
+
 
                 });
 
@@ -153,9 +177,9 @@ public class Scene2 {
                 System.out.println("prompt: PLAY");
                 mediaPlayer.play();
 
-                System.out.println("On ready "+mediaPlayer.getOnReady());
-                System.out.println("Status:" +mediaPlayer.getStatus());
-                System.out.println("Duration: "+ duration);
+                System.out.println("On ready " + mediaPlayer.getOnReady());
+                System.out.println("Status:" + mediaPlayer.getStatus());
+                System.out.println("Duration: " + duration);
 
             }
 
@@ -168,9 +192,9 @@ public class Scene2 {
                 System.out.println("prompt: PAUSED");
                 mediaPlayer.pause();
 
-                System.out.println("On ready: "+mediaPlayer.getOnReady());
-                System.out.println("Status:" +mediaPlayer.getStatus());
-                System.out.println("Duration: "+ duration);
+                System.out.println("On ready: " + mediaPlayer.getOnReady());
+                System.out.println("Status:" + mediaPlayer.getStatus());
+                System.out.println("Duration: " + duration);
             }
         });
 
@@ -197,7 +221,7 @@ public class Scene2 {
                 MediaView mediaView = new MediaView(mediaPlayer);
 
                 mediaView.setMediaPlayer(mediaPlayer);
-                
+
             }
 
         });
@@ -209,12 +233,12 @@ public class Scene2 {
                     mediaPlayer.pause();
 
                     // multiply duration by percentage calculated by slider position
-                    System.out.println("TIMESLIDER MARK: "+timeSlider.getValue());
-                   // mediaPlayer.seek(duration.multiply(timeSlider.getValue() / 100.0));
+                    System.out.println("TIMESLIDER MARK: " + timeSlider.getValue());
+                    // mediaPlayer.seek(duration.multiply(timeSlider.getValue() / 100.0));
 
-                    mediaPlayer.seek(Duration.millis(timeSlider.getValue()*1000));
+                    mediaPlayer.seek(Duration.millis(timeSlider.getValue() * 1000));
 
-                    System.out.println("DURATION: "+Duration.millis(timeSlider.getValue()));
+                    System.out.println("DURATION: " + Duration.millis(timeSlider.getValue()));
 
                     mediaPlayer.play();
                 }
@@ -223,7 +247,6 @@ public class Scene2 {
 
         return scene2;
     }
-
 
 
 }
