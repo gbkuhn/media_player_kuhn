@@ -1,8 +1,5 @@
 package main_package;
 
-import javafx.animation.Interpolator;
-import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.event.ActionEvent;
@@ -10,12 +7,10 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -41,9 +36,6 @@ public class Scene2 {
     Button pause_btn = new Button();
     Button load_btn = new Button("Load");
     static Text track_title = new Text("Track title");//blank upon initial load
-
-
-
 
     Duration duration;
 
@@ -119,6 +111,8 @@ public class Scene2 {
     }
 
 
+
+
     public Scene return_scene2(Stage primaryStage) {
 
 /*CSS*/
@@ -150,8 +144,6 @@ public class Scene2 {
 
         set_file(path);
 
-        get_mediaPlayer_obj().play();
-
         get_mediaPlayer_obj().pause(); //pause on load
         get_mediaPlayer_obj().setAutoPlay(false);//toggle whether song play when file chosen
 
@@ -168,9 +160,33 @@ public class Scene2 {
                     //media = new Media(new File(new_val).toURI().toString());
                     //mediaPlayer = new MediaPlayer(media);
 
+                    get_mediaPlayer_obj().getOnReady();
+
+                    System.out.println("duration "+get_mediaPlayer_obj().getTotalDuration());
+
+
+
                     get_mediaPlayer_obj().play();
 
                     track_title.setText(trim_directory(new_val));//trim directory method will get rid of prefix filepath
+
+                    /*adjust length of timeslider once the file is loaded*/
+
+                    /*FOR THE mediaPlayer object ot return certain values needs STATUS.READY
+                    the following code will handle it*/
+                    mediaPlayer.setOnReady(new Runnable() {
+
+                        @Override
+                        public void run() {
+
+                            System.out.println("Duration: "+mediaPlayer.getTotalDuration().toSeconds());
+
+                            timeSlider.setMax(mediaPlayer.getTotalDuration().toSeconds());
+
+
+                        }
+                    });
+
 
                     //mediaPlayer.play();
                 });
@@ -187,7 +203,6 @@ public class Scene2 {
                 System.out.println("On ready " + mediaPlayer.getOnReady());
                 System.out.println("Status:" + mediaPlayer.getStatus());
                 System.out.println("Duration: " + duration);
-
 
             }
 
