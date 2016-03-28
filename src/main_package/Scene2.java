@@ -40,6 +40,8 @@ public class Scene2 {
     static Text track_title = new Text("Track title");//blank upon initial load
     static Text track_time = new Text("0/0s");
 
+    static boolean timer_running=false;
+
 
     static double current_time = 0.0;
 
@@ -124,10 +126,9 @@ public class Scene2 {
 
 
 
-
     public Scene return_scene2(Stage primaryStage) {
 
-/*CSS*/
+        /*CSS*/
         scene2.getStylesheets().add(Main.class.getResource("Scene2UI.css").toExternalForm());
         track_title.setId("track-text");//CSS for track title
 
@@ -161,6 +162,22 @@ public class Scene2 {
         get_mediaPlayer_obj().pause(); //pause on load
         get_mediaPlayer_obj().setAutoPlay(false);//toggle whether song play when file chosen
 
+        //TIMER BLOCK
+        timeSlider.setBlockIncrement(1.0);
+        // creating timer task, timer
+        TimerTask track_timer = new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("timer working");
+                timeSlider.increment();
+            }
+        };
+        Timer timer = new Timer();
+
+        // scheduling the task at interval
+        //timer.schedule(track_timer,1000, 1000);
+
+        //TIMER BLOCK
 
 
         listView.setItems(data);//populates playlist
@@ -200,7 +217,12 @@ public class Scene2 {
 
                             track_time.setText(String.valueOf(Math.round(timeSlider.getValue())+"/"+String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds())))+"s");
 
+                            timeSlider.setValue(0.0);
 
+                            if(timer_running==false) {
+                                timer.schedule(track_timer, 1000, 1000);
+                            }
+                            timer_running=true;//flag so if a new song is selected the timer wont run again
                         }
                     });
 
@@ -287,8 +309,6 @@ public class Scene2 {
                     get_mediaPlayer_obj().play();
 
                     track_time.setText(String.valueOf(Math.round(timeSlider.getValue())+"/"+String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds())))+"s");
-
-
 
                 }
             }
