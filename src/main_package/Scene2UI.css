@@ -29,3 +29,7 @@
    -fx-fill: #191970;
    -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
 }
+
+#volume-txt{
+   -fx-font-size: 15px;
+}

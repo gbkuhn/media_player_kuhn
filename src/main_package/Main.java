@@ -16,11 +16,11 @@ import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 public class Main extends Application {
 
-    public static Text set_title(){
+    public static Text set_title() {
         Text scenetitle = new Text("Login");
         scenetitle.setId("login-text");//CSS
 
-       // scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        // scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         return scenetitle;
     }
@@ -42,7 +42,7 @@ public class Main extends Application {
         VBox layout = new VBox();
         layout.setSpacing(10);
         layout.setPadding(new Insets(20, 20, 10, 20));
-        layout.getChildren().addAll(set_title(),userTextField,pwBox,login_btn,settings_btn,actiontarget);
+        layout.getChildren().addAll(set_title(), userTextField, pwBox, login_btn, settings_btn, actiontarget);
 
 
         //VBox layout2 = new VBox();
