@@ -31,8 +31,8 @@ public class Main extends Application {
         Button settings_btn = new Button();
         Button login_btn = new Button();
 
-        settings_btn.setText("Settings action");
-        login_btn.setText("Login action");
+        settings_btn.setText("Settings");
+        login_btn.setText("Login");
 
         TextField userTextField = new TextField();
         PasswordField pwBox = new PasswordField();
@@ -98,5 +98,5 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
-    }
+    } //launch scene
 }

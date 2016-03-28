@@ -45,7 +45,7 @@ public class Scene2 {
 
     static double current_time = 0.0;
 
-
+    Timer timer = new Timer();
 
     Duration duration;
 
@@ -133,6 +133,7 @@ public class Scene2 {
         track_title.setId("track-text");//CSS for track title
 
         track_time.setId("track-time");
+        load_btn.setId("load-btn");
 
         setPause_btn(pause_btn);
         setPlay_btn(play_btn);
@@ -168,12 +169,12 @@ public class Scene2 {
         TimerTask track_timer = new TimerTask() {
             @Override
             public void run() {
-                System.out.println("timer working");
+                System.out.println("timer working "+timeSlider.getValue());
                 timeSlider.increment();
                 track_time.setText(String.valueOf(Math.round(timeSlider.getValue())+"/"+String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds())))+"s");
             }
         };
-        Timer timer = new Timer();
+
 
         // scheduling the task at interval
         //timer.schedule(track_timer,1000, 1000);
@@ -201,12 +202,21 @@ public class Scene2 {
 
                     track_title.setText(trim_directory(new_val));//trim directory method will get rid of prefix filepath
 
+
+
+                    if(timer_running==false) {
+                        timer.schedule(track_timer, 1000, 1000);
+                        timer_running=true;//flag so if a new song is selected the timer wont run again
+                    }
+
                     /*FOR THE mediaPlayer object ot return certain values needs STATUS.READY
                     the following code will handle it*/
                     mediaPlayer.setOnReady(new Runnable() {
 
                         @Override
                         public void run() {
+
+                            timeSlider.setValue(0.0);
 
                             System.out.println("Duration: "+mediaPlayer.getTotalDuration().toSeconds());
 
@@ -218,12 +228,7 @@ public class Scene2 {
 
                             track_time.setText(String.valueOf(Math.round(timeSlider.getValue())+"/"+String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds())))+"s");
 
-                            timeSlider.setValue(0.0);
 
-                            if(timer_running==false) {
-                                timer.schedule(track_timer, 1000, 1000);
-                            }
-                            timer_running=true;//flag so if a new song is selected the timer wont run again
                         }
                     });
 
@@ -242,7 +247,25 @@ public class Scene2 {
                 System.out.println("Status:" + mediaPlayer.getStatus());
                 System.out.println("Duration: " + duration);
 
-                track_time.setText(String.valueOf(Math.round(timeSlider.getValue())+"/"+String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds())))+"s");
+                //track_time.setText(String.valueOf(Math.round(timeSlider.getValue())+"/"+String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds())))+"s");
+
+                TimerTask track_timer = new TimerTask() {
+                    @Override
+                    public void run() {
+                        System.out.println("timer working "+timeSlider.getValue());
+                        timeSlider.increment();
+                        track_time.setText(String.valueOf(Math.round(timeSlider.getValue())+"/"+String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds())))+"s");
+                    }
+                };
+                timer = new Timer();
+
+
+                if(timer_running==false) {
+                    timer.schedule(track_timer, 1000, 1000);
+                    timer_running=true;//flag so if a new song is selected the timer wont run again
+                }
+
+                //flag so if a new song is selected the timer wont run again
 
 
             }
@@ -257,10 +280,15 @@ public class Scene2 {
                 get_mediaPlayer_obj().pause();
 
                 System.out.println("On ready: " + mediaPlayer.getOnReady());
-                System.out.println("Status:" + mediaPlayer.getStatus());
+                System.out.println("Status: " + mediaPlayer.getStatus());
                 System.out.println("Duration: " + duration);
 
-                track_time.setText(String.valueOf(Math.round(timeSlider.getValue())+"/"+String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds())))+"s");
+                //track_time.setText(String.valueOf(Math.round(timeSlider.getValue())+"/"+String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds())))+"s");
+
+                timer.cancel();
+                timer.purge();
+
+                timer_running=false;
 
             }
         });
