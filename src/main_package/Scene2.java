@@ -23,6 +23,8 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Scene2 {
 
@@ -36,6 +38,12 @@ public class Scene2 {
     Button pause_btn = new Button();
     Button load_btn = new Button("Load");
     static Text track_title = new Text("Track title");//blank upon initial load
+    static Text track_time = new Text("0/0s");
+
+
+    static double current_time = 0.0;
+
+
 
     Duration duration;
 
@@ -88,7 +96,7 @@ public class Scene2 {
 
         layout2.setSpacing(10);
         layout2.setPadding(new Insets(20, 10, 10, 10));
-        layout2.getChildren().addAll(play_btn, pause_btn,track_title, timeSlider, listView, load_btn);
+        layout2.getChildren().addAll(play_btn, pause_btn,track_time,track_title, timeSlider, listView, load_btn);
 
     }
 
@@ -110,6 +118,10 @@ public class Scene2 {
         return _directory;
     }
 
+    public void set_current_time(double _current_time) {
+        this.current_time = _current_time;
+    }
+
 
 
 
@@ -118,6 +130,8 @@ public class Scene2 {
 /*CSS*/
         scene2.getStylesheets().add(Main.class.getResource("Scene2UI.css").toExternalForm());
         track_title.setId("track-text");//CSS for track title
+
+        track_time.setId("track-time");
 
         setPause_btn(pause_btn);
         setPlay_btn(play_btn);
@@ -148,6 +162,7 @@ public class Scene2 {
         get_mediaPlayer_obj().setAutoPlay(false);//toggle whether song play when file chosen
 
 
+
         listView.setItems(data);//populates playlist
         listView.getSelectionModel().selectedItemProperty().addListener(
                 (ObservableValue<? extends String> ov, String old_val,
@@ -160,17 +175,13 @@ public class Scene2 {
                     //media = new Media(new File(new_val).toURI().toString());
                     //mediaPlayer = new MediaPlayer(media);
 
-                    get_mediaPlayer_obj().getOnReady();
 
                     System.out.println("duration "+get_mediaPlayer_obj().getTotalDuration());
 
 
-
-                    get_mediaPlayer_obj().play();
+                    get_mediaPlayer_obj().play();//plays song once selected
 
                     track_title.setText(trim_directory(new_val));//trim directory method will get rid of prefix filepath
-
-                    /*adjust length of timeslider once the file is loaded*/
 
                     /*FOR THE mediaPlayer object ot return certain values needs STATUS.READY
                     the following code will handle it*/
@@ -181,14 +192,18 @@ public class Scene2 {
 
                             System.out.println("Duration: "+mediaPlayer.getTotalDuration().toSeconds());
 
-                            timeSlider.setMax(mediaPlayer.getTotalDuration().toSeconds());
+                            timeSlider.setMax(get_mediaPlayer_obj().getTotalDuration().toSeconds());
+
+                            current_time=timeSlider.getValue();
+
+                            set_current_time(timeSlider.getValue());
+
+                            track_time.setText(String.valueOf(Math.round(timeSlider.getValue())+"/"+String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds())))+"s");
 
 
                         }
                     });
 
-
-                    //mediaPlayer.play();
                 });
 
 
@@ -204,6 +219,9 @@ public class Scene2 {
                 System.out.println("Status:" + mediaPlayer.getStatus());
                 System.out.println("Duration: " + duration);
 
+                track_time.setText(String.valueOf(Math.round(timeSlider.getValue())+"/"+String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds())))+"s");
+
+
             }
 
         });
@@ -218,6 +236,9 @@ public class Scene2 {
                 System.out.println("On ready: " + mediaPlayer.getOnReady());
                 System.out.println("Status:" + mediaPlayer.getStatus());
                 System.out.println("Duration: " + duration);
+
+                track_time.setText(String.valueOf(Math.round(timeSlider.getValue())+"/"+String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds())))+"s");
+
             }
         });
 
@@ -264,6 +285,34 @@ public class Scene2 {
                     System.out.println("DURATION: " + Duration.millis(timeSlider.getValue()));
 
                     get_mediaPlayer_obj().play();
+
+                    track_time.setText(String.valueOf(Math.round(timeSlider.getValue())+"/"+String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds())))+"s");
+
+
+
+                }
+            }
+        });
+
+        //this allows the point in the song to change if the sliding bar is clicked as opposed to dragging the bubble
+        timeSlider.valueProperty().addListener(new InvalidationListener() {
+            public void invalidated(Observable ov) {
+                if (timeSlider.isPressed()) {
+                    get_mediaPlayer_obj().pause();
+
+                    // multiply duration by percentage calculated by slider position
+                    System.out.println("TIMESLIDER MARK: " + timeSlider.getValue());
+                    // mediaPlayer.seek(duration.multiply(timeSlider.getValue() / 100.0));
+
+                    get_mediaPlayer_obj().seek(Duration.millis(timeSlider.getValue() * 1000));
+
+                    System.out.println("DURATION: " + Duration.millis(timeSlider.getValue()));
+
+                    get_mediaPlayer_obj().play();
+
+                    track_time.setText(String.valueOf(Math.round(timeSlider.getValue())+"/"+String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds())))+"s");
+
+
                 }
             }
         });
