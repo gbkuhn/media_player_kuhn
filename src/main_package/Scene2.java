@@ -170,6 +170,7 @@ public class Scene2 {
             public void run() {
                 System.out.println("timer working");
                 timeSlider.increment();
+                track_time.setText(String.valueOf(Math.round(timeSlider.getValue())+"/"+String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds())))+"s");
             }
         };
         Timer timer = new Timer();
