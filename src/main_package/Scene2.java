@@ -38,7 +38,7 @@ public class Scene2 {
 
     Button play_btn = new Button();
     Button pause_btn = new Button();
-    Slider volume = new Slider();
+    Slider volume = new Slider(0.0, 100.0,80.0);
     Button load_btn = new Button("Load");
     static Text track_title = new Text("Track title");//blank upon initial load
     static Text track_time = new Text("0/0s");
@@ -131,7 +131,20 @@ public class Scene2 {
     }
 
 
+    // creating timer task, timer
+    TimerTask track_timer = new TimerTask() {
+        @Override
+        public void run() {
+            System.out.println("timer working " + timeSlider.getValue());
+            timeSlider.setBlockIncrement(1.0);
+            timeSlider.increment();
+            track_time.setText(String.valueOf(Math.round(timeSlider.getValue()) + "/" + String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds()))) + "s");
+        }
+    };
+
+
     public Scene return_scene2(Stage primaryStage) {
+
 
         /*CSS*/
         scene2.getStylesheets().add(Main.class.getResource("Scene2UI.css").toExternalForm());
@@ -169,17 +182,6 @@ public class Scene2 {
         get_mediaPlayer_obj().pause(); //pause on load
         get_mediaPlayer_obj().setAutoPlay(false);//toggle whether song play when file chosen
 
-        //TIMER BLOCK
-        timeSlider.setBlockIncrement(1.0);
-        // creating timer task, timer
-        TimerTask track_timer = new TimerTask() {
-            @Override
-            public void run() {
-                System.out.println("timer working " + timeSlider.getValue());
-                timeSlider.increment();
-                track_time.setText(String.valueOf(Math.round(timeSlider.getValue()) + "/" + String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds()))) + "s");
-            }
-        };
 
         listView.setItems(data);//populates playlist
         listView.getSelectionModel().selectedItemProperty().addListener(
@@ -192,33 +194,38 @@ public class Scene2 {
                     set_file(new_val);
                     //media = new Media(new File(new_val).toURI().toString());
                     //mediaPlayer = new MediaPlayer(media);
+                    //set on ready is needed to return the duration of the song
 
-
-                    System.out.println("duration " + get_mediaPlayer_obj().getTotalDuration());
-
-
-                    get_mediaPlayer_obj().play();//plays song once selected
-
-                    track_title.setText(trim_directory(new_val));//trim directory method will get rid of prefix filepath
-
-
-                    if (timer_running == false) {
-                        timer.schedule(track_timer, 1000, 1000);
-                        timer_running = true;//flag so if a new song is selected the timer wont run again
-                    }
-
-                    /*FOR THE mediaPlayer object ot return certain values needs STATUS.READY
-                    the following code will handle it*/
                     mediaPlayer.setOnReady(new Runnable() {
 
                         @Override
                         public void run() {
 
+                            timeSlider.setMax(get_mediaPlayer_obj().getTotalDuration().toSeconds());
+
+                            get_mediaPlayer_obj().play();//plays song once selected
+
+                            track_title.setText(trim_directory(new_val));//trim directory method will get rid of prefix filepath
+                            System.out.println("SONG: "+trim_directory(new_val));
+                        }
+                    });
+
+                    if(timer_running==false) {
+                        timer = new Timer();
+                        timer.schedule(track_timer, 1000, 1000);
+                        timer_running = true;
+                    }
+
+                    /*FOR THE mediaPlayer object ot return certain values needs STATUS.READY
+                    the following code will handle it*/
+
                             timeSlider.setValue(0.0);
 
                             System.out.println("Duration: " + mediaPlayer.getTotalDuration().toSeconds());
 
-                            timeSlider.setMax(get_mediaPlayer_obj().getTotalDuration().toSeconds());
+                            //timeSlider.setMax(get_mediaPlayer_obj().getTotalDuration().toSeconds());
+
+                            System.out.println("slider max "+get_mediaPlayer_obj().getTotalDuration().toSeconds());
 
                             current_time = timeSlider.getValue();
 
@@ -226,17 +233,14 @@ public class Scene2 {
 
                             track_time.setText(String.valueOf(Math.round(timeSlider.getValue()) + "/" + String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds()))) + "s");
 
-
-                        }
-                    });
-
                 });
 
 
         play_btn.setOnAction(new EventHandler<ActionEvent>() {
-
             @Override
             public void handle(ActionEvent event) {
+                if(timer_running==false){ //if the track is already paying it will not do anything, if its not the timer_running boolean will be false
+
                 System.out.println("prompt: PLAY");
 
                 get_mediaPlayer_obj().play();
@@ -255,20 +259,15 @@ public class Scene2 {
                         track_time.setText(String.valueOf(Math.round(timeSlider.getValue()) + "/" + String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds()))) + "s");
                     }
                 };
-                timer = new Timer();
 
+                    timer = new Timer();
+                timer.schedule(track_timer, 1000, 1000);
 
-                if (timer_running == false) {
-                    timer.schedule(track_timer, 1000, 1000);
-                    timer_running = true;//flag so if a new song is selected the timer wont run again
-                }
 
                 //flag so if a new song is selected the timer wont run again
-
-
             }
 
-        });
+        }});
 
         pause_btn.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -358,6 +357,33 @@ public class Scene2 {
                     get_mediaPlayer_obj().play();
 
                     track_time.setText(String.valueOf(Math.round(timeSlider.getValue()) + "/" + String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds()))) + "s");
+
+
+                }
+            }
+        });
+
+        volume.valueProperty().addListener(new InvalidationListener() {
+            public void invalidated(Observable ov) {
+                if (volume.isValueChanging()) {
+
+                    mediaPlayer.setVolume(volume.getValue());
+
+                    System.out.println("volume "+volume.getValue());
+
+
+                }
+            }
+        });
+
+        //this allows the point in the song to change if the sliding bar is clicked as opposed to dragging the bubble
+        volume.valueProperty().addListener(new InvalidationListener() {
+            public void invalidated(Observable ov) {
+                if (volume.isPressed()) {
+
+                    System.out.println("volume "+volume.getValue());
+
+                    mediaPlayer.setVolume(volume.getValue());
 
 
                 }
