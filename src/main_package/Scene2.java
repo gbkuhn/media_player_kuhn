@@ -44,9 +44,7 @@ public class Scene2 {
     static Text track_time = new Text("0/0s");
     static Text volume_text = new Text("Volume");
 
-
     static boolean timer_running = false;
-
 
     static double current_time = 0.0;
 
@@ -120,7 +118,7 @@ public class Scene2 {
     }
 
 
-    public String trim_directory(String _directory) {
+     String trim_directory(String _directory) {
         _directory = path.substring(path.lastIndexOf("\\") + 1, path.length());
 
         return _directory;
@@ -141,6 +139,7 @@ public class Scene2 {
             track_time.setText(String.valueOf(Math.round(timeSlider.getValue()) + "/" + String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds()))) + "s");
         }
     };
+
 
 
     public Scene return_scene2(Stage primaryStage) {
@@ -189,6 +188,16 @@ public class Scene2 {
                  String new_val) -> {
                     System.out.println(new_val);
 
+
+                    String path = new_val;
+                    File f = new File(path);
+                    System.out.println(f.getName());
+
+                    track_title.setText(f.getName());
+
+
+                    System.out.println("TRACK TITLE DISPLAYED "+track_title.getText());
+
                     get_mediaPlayer_obj().stop();
 
                     set_file(new_val);
@@ -205,7 +214,7 @@ public class Scene2 {
 
                             get_mediaPlayer_obj().play();//plays song once selected
 
-                            track_title.setText(trim_directory(new_val));//trim directory method will get rid of prefix filepath
+                            //track_title.setText(trim_directory(new_val));//trim directory method will get rid of prefix filepath
                             System.out.println("SONG: "+trim_directory(new_val));
                         }
                     });
@@ -226,11 +235,11 @@ public class Scene2 {
                             //timeSlider.setMax(get_mediaPlayer_obj().getTotalDuration().toSeconds());
 
                             System.out.println("slider max "+get_mediaPlayer_obj().getTotalDuration().toSeconds());
-
+/*
                             current_time = timeSlider.getValue();
 
                             set_current_time(timeSlider.getValue());
-
+*/
                             track_time.setText(String.valueOf(Math.round(timeSlider.getValue()) + "/" + String.valueOf(Math.round(get_mediaPlayer_obj().getTotalDuration().toSeconds()))) + "s");
 
                 });
@@ -392,7 +401,6 @@ public class Scene2 {
 
         return scene2;
     }
-
 
 }
 
